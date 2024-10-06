@@ -3,5 +3,9 @@
     <string name="start">START</string>
     <string name="stop">STOP</string>
     <string name="application">My Application</string>
-    <string name="download">DOWNLOADING…</string>
+    <string name="download">DOWNLOADING...</string>
+    <string name="logcat">Download Progress {percentage}%</string>
+    <string name="progressText">Download Progress {percentage}%</string>
+    <string name="cancelled">Download Cancelled</string>
+    <string name="completed">Download Complete</string>
 </resources>

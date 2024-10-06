@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -35,23 +34,31 @@ class MainActivity : AppCompatActivity() {
     private suspend fun mockFileDownloader() {
         val button = findViewById<Button>(R.id.start)
         val progBar = findViewById<ProgressBar>(R.id.progress_bar)
+        val progressText = findViewById<TextView>(R.id.progressText)
+
         withContext(Dispatchers.Main) {
             button.text = getString(R.string.download)
             progBar.visibility = View.VISIBLE
+            progressText.text = getString(R.string.progressText)
         }
         for (downloadProgress in 0 .. 100 step 10) {
             Log.d(TAG, "Download progress $downloadProgress%")
             progBar.progress = downloadProgress
+            withContext(Dispatchers.Main) {
+                progressText.text = getString(R.string.progressText).replace("{percentage}", downloadProgress.toString())
+                }
             delay(1000)
         }
         withContext(Dispatchers.Main) {
+            button.text = getString(R.string.start)
+            progressText.text = getString(R.string.completed)
             progBar.visibility = View.INVISIBLE
         }
     }
 
     fun startDownload(view: View) {
+        if (job?.isActive == true) return
         job = CoroutineScope(Dispatchers.Default).launch {
-            val progBar = findViewById<ProgressBar>(R.id.progress_bar)
             mockFileDownloader()
         }
     }
@@ -60,9 +67,11 @@ class MainActivity : AppCompatActivity() {
         job?.cancel()
 
         val startButton = findViewById<Button>(R.id.start)
+        val progressText = findViewById<TextView>(R.id.progressText)
         val progBar = findViewById<ProgressBar>(R.id.progress_bar)
 
         progBar.visibility = View.INVISIBLE
+        progressText.text =  getString(R.string.cancelled)
         startButton.text = getString(R.string.start)
     }
 
