@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             progressText.text = getString(R.string.progressText)
         }
         for (downloadProgress in 0 .. 100 step 10) {
-            Log.d(TAG, "Download progress $downloadProgress%")
+            Log.d(TAG, getString(R.string.progressText).replace("{percentage}", downloadProgress.toString()))
             progBar.progress = downloadProgress
             withContext(Dispatchers.Main) {
                 progressText.text = getString(R.string.progressText).replace("{percentage}", downloadProgress.toString())
